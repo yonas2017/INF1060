@@ -6,7 +6,7 @@ void daemonize(const char* const daemonName)
   const pid_t pid = fork();
   if (pid == -1) 
   {
-    ATV_BASE_FATAL_ERROR(daemonName, 
+    FATAL_ERROR(daemonName, 
         "fork failed: (%d) %s", errno, std::strerror(errno));
   }
 
@@ -21,7 +21,7 @@ void daemonize(const char* const daemonName)
   const pid_t sid = setsid();
   if (sid == -1) 
   {
-    ATV_BASE_FATAL_ERROR(daemonName, 
+    FATAL_ERROR(daemonName, 
         "setsid failed: (%d) %s", errno, std::strerror(errno));
   }
 
@@ -31,7 +31,7 @@ void daemonize(const char* const daemonName)
   // Change current working directory to a known place
   if ((chdir("/")) == -1)
   {
-    ATV_BASE_FATAL_ERROR(daemonName, 
+    FATAL_ERROR(daemonName, 
         "chdir failed: (%d) %s", errno, std::strerror(errno));
   }
 
@@ -40,38 +40,38 @@ void daemonize(const char* const daemonName)
   // lowest unused file descriptor, 
   if (close(STDIN_FILENO) == -1)
   {
-    ATV_BASE_FATAL_ERROR(daemonName, 
+    FATAL_ERROR(daemonName, 
         "Failed to close stdin: (%d) %s", errno, std::strerror(errno));
   }
   
   if (close(STDOUT_FILENO) == -1)
   {
-    ATV_BASE_FATAL_ERROR(daemonName, 
+    FATAL_ERROR(daemonName, 
         "Failed to close stdout: (%d) %s", errno, std::strerror(errno));
   }
   
   if (close(STDERR_FILENO) == -1)
   {
-    ATV_BASE_FATAL_ERROR(daemonName, 
+    FATAL_ERROR(daemonName, 
         "Failed to close stderr: (%d) %s", errno, std::strerror(errno));
   }
 
   int openRet = -1;
   if ((openRet = open("/dev/null", O_RDONLY)) != STDIN_FILENO) 
   {
-    ATV_BASE_FATAL_ERROR(daemonName, 
+    FATAL_ERROR(daemonName, 
         "Failed to reopen stdin: (%d) (%d) %s", openRet, errno, std::strerror(errno));
   }
 
   if ((openRet = open("/dev/null", O_WRONLY)) != STDOUT_FILENO) 
   {
-    ATV_BASE_FATAL_ERROR(daemonName, 
+    FATAL_ERROR(daemonName, 
         "Failed to reopen stdout: (%d) (%d) %s", openRet, errno, std::strerror(errno));
   }
 
   if ((openRet = open("/dev/null", O_RDWR)) != STDERR_FILENO) 
   {
-    ATV_BASE_FATAL_ERROR(daemonName, 
+    FATAL_ERROR(daemonName, 
         "Failed to reopen stderr: (%d) (%d) %s", openRet, errno, std::strerror(errno));
   }
 }
