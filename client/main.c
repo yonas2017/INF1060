@@ -1,5 +1,5 @@
 #include "client.h"
-#include "stack.h"
+#include "queue.h"
 #include <stdio.h>
 
 int main(int argc, char* argv [])
@@ -7,26 +7,26 @@ int main(int argc, char* argv [])
 	printf("Client Started\n");
 
 //	/*
-//	 * LIFO stack, change it to FIFO //TODO
+//	 * FIFO queue
 //	 */
 //	int size = 10;
-//	StackPtr stack = stackCreate(size);
-//	if(stack)
+//	QueuePtr queue = queueCreate(size);
+//	if(queue)
 //	{
-//		stackPush(stack, 10);
-//		stackPush(stack, 3);
-//		printf("stack->m_size = %d\n", stack->m_size);
-//		while(!stackIsEmpty(stack))
+//		enqueue(queue, 10);
+//		enqueue(queue, 3);
+//		printf("queue->m_size = %d\n", queue->m_stack1->m_size);
+//		while(!queueIsEmpty(queue))
 //		{
-//			int* data = stackPop(stack);
+//			int* data = dequeue(queue);
 //
 //			if(data)
 //			{
-//				printf("stack->m_stack = %d\n", *data); //TODO
+//				printf("queue->m_stack = %d\n", *data); //TODO
 //			}
 //		}
 //
-//		stackDestroy(stack);
+//		queueDestroy(queue);
 //	}
 
 	return 0;

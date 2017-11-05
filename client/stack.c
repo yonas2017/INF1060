@@ -1,37 +1,42 @@
 #include "stack.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
 StackPtr stackCreate(int size)
 {
-	StackPtr stack;
+	StackPtr p_stack;
 
 	/*
 	 * Allocate the stack data structure on the Heap
 	 */
-	stack = (StackPtr) malloc(sizeof(struct Stack));
+	p_stack = (StackPtr) malloc(sizeof(struct Stack));
 
 	/*
-	 * Allocate the stack data memory on the Heap
+	 * Allocate the stack storage memory on the Heap
 	 */
-	if(stack)
+	if(p_stack)
 	{
-		stack->m_stack = (int*) calloc(size, sizeof(int));
-		stack->m_top = -1;
-		stack->m_size = size;
+		p_stack->m_storage = (int*) calloc(size, sizeof(int));
+		p_stack->m_top     = -1;
+		p_stack->m_size    = size;
 
 		printf("Stack Created Successfully.\n");
 	}
 
-	return stack;
+	return p_stack;
 }
 
-void stackPush(StackPtr stack, int data)
+void stackPush(StackPtr p_stack, int data)
 {
-	if(!stackIsFull(stack))
+	if(!(p_stack && p_stack->m_storage))
 	{
-		stack->m_top++;
-		stack->m_stack[stack->m_top] = data;
+		return;
+	}
+
+	if(!stackIsFull(p_stack))
+	{
+		p_stack->m_storage[++p_stack->m_top] = data;
 	}
 	else
 	{
@@ -39,18 +44,30 @@ void stackPush(StackPtr stack, int data)
 	}
 }
 
-int stackIsFull(const StackPtr stack)
+int stackIsFull(const StackPtr p_stack)
 {
-   return (stack->m_top == stack->m_size) ? 1 : 0;
+	if(!p_stack)
+	{
+		return 0;
+	}
+	else
+	{
+		return (p_stack->m_top >= p_stack->m_size) ? 1 : 0;
+	}
 }
 
-int* stackPop(StackPtr stack)
+int* stackPop(StackPtr p_stack)
 {
 	int* data = NULL;
-	if(!stackIsEmpty(stack))
+
+	if(!(p_stack && p_stack->m_storage))
 	{
-		data = &stack->m_stack[stack->m_top];
-		stack->m_top--;
+		return NULL;
+	}
+
+	if(!stackIsEmpty(p_stack))
+	{
+		data = &p_stack->m_storage[p_stack->m_top--];
 	}
 	else
 	{
@@ -60,22 +77,35 @@ int* stackPop(StackPtr stack)
 	return data;
 }
 
-int stackIsEmpty(const StackPtr stack)
+int stackIsEmpty(const StackPtr p_stack)
 {
-	return (stack->m_top) == -1 ? 1 : 0;
+	if(!p_stack)
+	{
+		return 0;
+	}
+	else
+	{
+		return (p_stack->m_top) < 0 ? 1 : 0;
+	}
 }
 
-void stackDestroy(StackPtr stack)
+void stackDestroy(StackPtr p_stack)
 {
-	/*
-	 * Free the stack data memory first
-	 */
-	free(stack->m_stack);
+	if(p_stack)
+	{
+		/*
+		 * Free the stack storage memory first
+		 */
+		if(p_stack->m_storage)
+		{
+			free(p_stack->m_storage);
+		}
 
-	/*
-	 * Free the stack data structure at last
-	 */
-	free(stack);
+		/*
+		 * Free the stack data structure finally
+		 */
+		free(p_stack);
 
-	printf("Stack Destroyed.\n");
+		printf("Stack Destroyed.\n");
+	}
 }
