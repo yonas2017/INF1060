@@ -49,7 +49,6 @@ include_directories(${INC_DIR})
 #
 file(GLOB CLIENT_SRC_FILES 
      "${CLIENT_DIR}/*.c"
-     "${CLIENT_DIR}/stack.c"
      "${CLIENT_DIR}/tcp.c"
 )
 add_executable(client ${CLIENT_SRC_FILES})
@@ -59,7 +58,6 @@ add_executable(client ${CLIENT_SRC_FILES})
 #
 file(GLOB SERVER_SRC_FILES 
      "${SERVER_DIR}/*.c"
-     "${SERVER_DIR}/stack.c"
      "${SERVER_DIR}/tcp.c"
 )
 add_executable(server ${SERVER_SRC_FILES})
