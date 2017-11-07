@@ -17,7 +17,7 @@ StackPtr stackCreate(int size)
 	 */
 	if(p_stack)
 	{
-		p_stack->m_storage = (int*) calloc(size, sizeof(int));
+		p_stack->m_storage = (ServerMessagePtr) calloc(size, sizeof(struct ServerMessage));
 		p_stack->m_top     = -1;
 		p_stack->m_size    = size;
 
@@ -27,7 +27,7 @@ StackPtr stackCreate(int size)
 	return p_stack;
 }
 
-void stackPush(StackPtr p_stack, int data)
+void stackPush(StackPtr p_stack, ServerMessagePtr message)
 {
 	if(!(p_stack && p_stack->m_storage))
 	{
@@ -36,11 +36,11 @@ void stackPush(StackPtr p_stack, int data)
 
 	if(!stackIsFull(p_stack))
 	{
-		p_stack->m_storage[++p_stack->m_top] = data;
+		p_stack->m_storage[++p_stack->m_top] = *message;
 	}
 	else
 	{
-		printf("Could not insert data, Stack is full.\n");
+		printf("Could not insert message, Stack is full.\n");
 	}
 }
 
@@ -56,9 +56,9 @@ int stackIsFull(const StackPtr p_stack)
 	}
 }
 
-int* stackPop(StackPtr p_stack)
+ServerMessagePtr stackPop(StackPtr p_stack)
 {
-	int* data = NULL;
+	ServerMessagePtr message = NULL;
 
 	if(!(p_stack && p_stack->m_storage))
 	{
@@ -67,14 +67,14 @@ int* stackPop(StackPtr p_stack)
 
 	if(!stackIsEmpty(p_stack))
 	{
-		data = &p_stack->m_storage[p_stack->m_top--];
+		message = &p_stack->m_storage[p_stack->m_top--];
 	}
 	else
 	{
-		printf("Could not retrieve data, Stack is empty.\n");
+		printf("Could not retrieve message, Stack is empty.\n");
 	}
 
-	return data;
+	return message;
 }
 
 int stackIsEmpty(const StackPtr p_stack)

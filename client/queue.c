@@ -26,14 +26,14 @@ QueuePtr queueCreate(int size)
 	return p_queue;
 }
 
-void enqueue(QueuePtr p_queue, int data)
+void enqueue(QueuePtr p_queue, ServerMessagePtr message )
 {
 	if(!p_queue)
 	{
 		return;
 	}
 
-	stackPush(p_queue->m_stack1, data);
+	stackPush(p_queue->m_stack1, message);
 }
 
 int queueIsFull(const QueuePtr p_queue)
@@ -48,9 +48,9 @@ int queueIsFull(const QueuePtr p_queue)
 	}
 }
 
-int* dequeue(QueuePtr p_queue)
+ServerMessagePtr dequeue(QueuePtr p_queue)
 {
-	int* data = NULL;
+	ServerMessagePtr message = NULL;
 
 	if(!p_queue)
 	{
@@ -59,18 +59,18 @@ int* dequeue(QueuePtr p_queue)
 
 	while(!stackIsEmpty(p_queue->m_stack1))
 	{
-		stackPush(p_queue->m_stack2, *stackPop(p_queue->m_stack1));
+		stackPush(p_queue->m_stack2, stackPop(p_queue->m_stack1));
 	}
 
 	//pop the data
-	data = stackPop(p_queue->m_stack2);
+	message = stackPop(p_queue->m_stack2);
 
 	while(!stackIsEmpty(p_queue->m_stack2))
 	{
-		stackPush(p_queue->m_stack1, *stackPop(p_queue->m_stack2));
+		stackPush(p_queue->m_stack1, stackPop(p_queue->m_stack2));
 	}
 
-	return data;
+	return message;
 }
 
 int queueIsEmpty(const QueuePtr p_queue)

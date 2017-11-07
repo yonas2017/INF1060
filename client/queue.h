@@ -2,6 +2,7 @@
 #define QUEUE_H
 
 #include "stack.h"
+#include <messages.h>
 
 /*
  * Queue data structure
@@ -23,7 +24,7 @@ QueuePtr queueCreate(int size);
 /*
  *
  */
-void enqueue(QueuePtr p_queue, int data);
+void enqueue(QueuePtr p_queue, ServerMessagePtr message );
 
 /*
  *
@@ -33,7 +34,7 @@ int queueIsFull(const QueuePtr p_queue);
 /*
  *
  */
-int* dequeue(QueuePtr p_queue);
+ServerMessagePtr dequeue(QueuePtr p_queue);
 
 /*
  *
