@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 2.8)
 project(INF1060_project)
 
 # $ cmake -D CMAKE_BUILD_TYPE=Release ..
@@ -47,15 +47,17 @@ include_directories(${INC_DIR})
 #
 # CONFIGURE client
 #
-file(GLOB CLIENT_SRC_FILES 
+file(GLOB CLIENT_SRC_FILES
      "${CLIENT_DIR}/*.c"
+     "${INC_DIR}/*.c"
 )
 add_executable(client ${CLIENT_SRC_FILES})
 
 #
 # CONFIGURE server
 #
-file(GLOB SERVER_SRC_FILES 
+file(GLOB SERVER_SRC_FILES
      "${SERVER_DIR}/*.c"
+     "${INC_DIR}/*.c"
 )
 add_executable(server ${SERVER_SRC_FILES})

@@ -38,8 +38,7 @@ void tcpOpen(TcpPtr p_tcp)
 
 int tcpSend(TcpPtr p_tcp, const ClientMessagePtr p_message)
 {
-	if(send(p_tcp->m_sockDesc, p_message,
-			p_message->msg_length + p_message->header_length, 0) < 0)
+	if(send(p_tcp->m_sockDesc, p_message, sizeof(struct ClientMessage), 0) < 0)
 	{
 		printf("send() failed\n");
 		return 0;

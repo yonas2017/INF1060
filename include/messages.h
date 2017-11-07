@@ -2,13 +2,15 @@
 #define MESSAGES_H
 
 #include <stdint.h>
+#include <stdio.h>
 
-//enum MessageType
-//{
-//	STATUS=0,
-//	CONFIG,
-//	TYPE_INVALID
-//};
+enum ClientMessageType
+{
+	GET_JOB=0,
+	NORMAL_TERMINATOIN,
+	FAIL_TERMINATION,
+	QUIT_PROGRAM
+};
 
 /*
  * Used for sending a message from Client to Server using tcp socket.
@@ -20,14 +22,40 @@
  */
 struct ClientMessage
 {
-	uint32_t msg_id;
-    uint32_t msg_type;
-    uint32_t header_length;
-    uint32_t msg_length;
-    uint8_t  msg[4096];
+    uint8_t  msg_type;
+    uint8_t  all_jobs;
+		uint16_t num_jobs;
 };
 
 typedef struct ClientMessage* ClientMessagePtr;
+
+//-------------------------------------------------------
+struct Job
+{
+	char JobType;
+	unsigned int jobTextLength;
+	char JobTekst[4096];
+};
+
+/*
+ *
+ */
+uint8_t getJobType(char JobType);
+
+/*
+ *
+ */
+uint8_t computeChecksum(
+	unsigned int jobTextLength,
+	char* JobTekst);
+
+/*
+ *
+ */
+unsigned char getJobInfo(
+	char JobType,
+	unsigned int jobTextLength,
+	char* JobTekst);
 
 /*
  * Used for sending a message from Server to Client using tcp socket.
@@ -39,11 +67,9 @@ typedef struct ClientMessage* ClientMessagePtr;
  */
 struct ServerMessage
 {
-	uint32_t msg_id;
-    uint32_t msg_type;
-    uint32_t header_length;
-    uint32_t msg_length;
-    uint8_t  msg[4096];
+	  unsigned char JobInfo;
+    unsigned int jobTextLength;
+    char JobTekst[4096];
 };
 
 typedef struct ServerMessage* ServerMessagePtr;

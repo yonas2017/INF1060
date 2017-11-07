@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-
+/*
 int main (){
 int pipeends[2];
 int pipeends1[2];
@@ -16,17 +16,17 @@ child_a = fork();
 
 
 if (child_a == 0) {
-    /* Child A code */
+    // Child A code
 void chilld_A();
 
 } else {
     child_b = fork();
 
     if (child_b == 0) {
-        /* Child B code */
+        // Child B code
 void chilld_B();
     } else {
-        /* Parent Code */
+        // Parent Code
     }
 }
 void chilld_A(){
@@ -46,3 +46,4 @@ dup2(pipeends1[0], 0);
 }
 
 }
+*/
