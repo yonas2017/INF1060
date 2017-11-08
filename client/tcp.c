@@ -9,13 +9,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-void tcpOpen(TcpPtr p_tcp)
+int tcpOpen(TcpPtr p_tcp)
 {
 	// open a stream socket
 	if((p_tcp->m_sockDesc = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 	{
 		printf("socket() failed\n");
-		return;
+		return -1;
 	}
 
 	struct  sockaddr_in server_address;
@@ -32,8 +32,10 @@ void tcpOpen(TcpPtr p_tcp)
 		printf("could not connect to server\n");
 		close(p_tcp->m_sockDesc);
 		p_tcp->m_sockDesc = -1;
-		return;
+		return -1;
 	}
+
+	return 0;
 }
 
 int tcpSend(TcpPtr p_tcp, const ClientMessagePtr p_message)

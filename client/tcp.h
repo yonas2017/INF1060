@@ -17,7 +17,7 @@ typedef struct Tcp* TcpPtr;
 /*
  *
  */
-void tcpOpen(TcpPtr p_tcp);
+int tcpOpen(TcpPtr p_tcp);
 
 /*
  * Send UDP message

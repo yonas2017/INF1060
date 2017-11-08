@@ -13,4 +13,21 @@ struct Client
 	struct ServerMessage m_serverMessage;
 };
 
+typedef struct Client* ClientPtr;
+
+/*
+*
+*/
+int getClientMessage(ClientMessagePtr p_message);
+
+/*
+*
+*/
+char getJobType(char JobType);
+
+/*
+*
+*/
+void releaseResources(ClientPtr p_client);
+
 #endif

@@ -1,5 +1,7 @@
 #include "client.h"
 #include "queue.h"
+#include "tcp.h"
+
 #include <messages.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,8 +15,10 @@ static void help()
 
 int main(int argc, char* argv [])
 {
+	printf("Client Started\n");
+
 	/*
-	 * Check arguments used. has to have 2 args
+	 * Check number of arguments passed by user.
 	 */
 	if(argc < 3)
 	{
@@ -22,80 +26,87 @@ int main(int argc, char* argv [])
 		return -1;
 	}
 
-	printf("Client Started\n");
+	/*
+	* Create the client object
+	*/
+	struct Client client;
 
 	/*
-	 * Create Queue
+	 * Open TCP Socket
+	 */
+	client.m_tcp.m_ip = argv[1];
+	sscanf(argv[2], "%d", &client.m_tcp.m_port);
+
+	// if(tcpOpen(&client.m_tcp) != 0) //TODO
+	// {
+	// 	return -1;
+	// }
+
+	/*
+	 * Create Two Queues for the childs
 	 */
 	int queueSize = 16;
-	struct Client client;
 	client.m_queue[0] = queueCreate(queueSize);
 	client.m_queue[1] = queueCreate(queueSize);
 
 	/*
-	 * Initialize TCP
+	 * Get Client Message
 	 */
-	client.m_tcp.m_ip = argv[1];
-	client.m_tcp.m_port = atoi(argv[2]);
+	if(getClientMessage(&client.m_clientMessage) != 0)
+	{
+		releaseResources(&client);
+		return -1;
+	}
 
 	/*
-	 * Get input from User
-	 */
-	 char option, numJobs;
-   printf("1 - Get one Job from server.\n");
-   printf("2 - Get X number of jobs from the server\n");
-   printf("3 - Get all jobs from the server\n");
-   printf("4 - Quit Program\n\n");
+	* Send client messsage to server
+	*/
+	tcpSend(&client.m_tcp, &client.m_clientMessage);
 
-   scanf("%c", &option);
+	/*
+	* Receive server message
+	*/
+	while(tcpReceive(&client.m_tcp, &client.m_serverMessage))
+	{
+		/*
+		* Get Job Type
+		*/
+		char jobType = getJobType(client.m_serverMessage.JobInfo);
+		printf("jobType: %c\n", jobType);
+		printf("%s\n", client.m_serverMessage.JobTekst);
 
-   switch(option)
-	 {
-		 case'1':
-		 	printf("Getting one job from the server has been selected.\n");
-      break;
-     case'2':
-			 printf("Enter number of jobs to get from the server:\n");
-			 scanf("%c", &numJobs);
-       printf("Getting %c job from the server has been selected.\n", numJobs);
-       break;
-     case'3':
-			 printf("Getting all jobs from the server has been selected.\n");
-       break;
-     case'4':
-       printf("Quiting program.\n");
-       break;
- 		 default:
-			 printf("Invald choice  %c\n", option);
-			 return -1;
-		 }
+		switch(jobType)
+		{
+			case 'O':
+			  /*
+			   * Enqueue message for child 1
+			   */
+				enqueue(client.m_queue[0], &client.m_serverMessage);
+				break;
+			case 'E':
+			  /*
+			   * Enqueue message for child 2
+			   */
+				enqueue(client.m_queue[1], &client.m_serverMessage);
+				break;
+			case 'Q':
+			 /*
+			  * Enqueue message for both childs
+			  */
+				enqueue(client.m_queue[0], &client.m_serverMessage);
+				enqueue(client.m_queue[1], &client.m_serverMessage);
+				break;
+			default:
+				printf("Wrong Job Type: %c\n", jobType);
+				releaseResources(&client);
+				return -1;
+		}
+	}
 
-//	/*
-//	 * FIFO queue
-//	 */
-//	int size = 10;
-//	QueuePtr queue = queueCreate(size);
-//	if(queue)
-//	{
-//		enqueue(queue, 10);
-//		enqueue(queue, 3);
-//		printf("queue->m_size = %d\n", queue->m_stack1->m_size);
-//		while(!queueIsEmpty(queue))
-//		{
-//			ServerMessagePtr data = dequeue(queue);
-//
-//			if(ServerMessagePtr)
-//			{
-//				printf("queue->m_stack = %s\n", ServerMessagePtr->JobInfo); //TODO
-//        printf("queue->jobTextLength = %s\n", ServerMessagePtr->jobTextLength);
-//			}
-//		}
-//
-//		queueDestroy(queue);
-//	}
-
-	queueDestroy(client.m_queue[0]);
-	queueDestroy(client.m_queue[1]);
+	/*
+	* Release resources
+	*/
+	releaseResources(&client);
 
 	return 0;
 }

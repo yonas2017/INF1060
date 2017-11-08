@@ -24,7 +24,7 @@ QueuePtr queueCreate(int size);
 /*
  *
  */
-void enqueue(QueuePtr p_queue, ServerMessagePtr message );
+void enqueue(QueuePtr p_queue, ServerMessagePtr message);
 
 /*
  *

@@ -11,4 +11,31 @@ struct Server
 	struct ServerMessage m_serverMessage;
 };
 
+struct Job
+{
+	char JobType;
+	unsigned int jobTextLength;
+	char JobTekst[4096];
+};
+
+/*
+ *
+ */
+uint8_t getJobType(char JobType);
+
+/*
+ *
+ */
+uint8_t computeChecksum(
+	unsigned int jobTextLength,
+	char* JobTekst);
+
+/*
+ *
+ */
+unsigned char getJobInfo(
+	char JobType,
+	unsigned int jobTextLength,
+	char* JobTekst);
+
 #endif

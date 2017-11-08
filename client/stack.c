@@ -21,7 +21,7 @@ StackPtr stackCreate(int size)
 		p_stack->m_top     = -1;
 		p_stack->m_size    = size;
 
-		printf("Stack Created Successfully.\n");
+		// printf("Stack Created Successfully.\n");
 	}
 
 	return p_stack;
@@ -106,6 +106,6 @@ void stackDestroy(StackPtr p_stack)
 		 */
 		free(p_stack);
 
-		printf("Stack Destroyed.\n");
+		// printf("Stack Destroyed.\n");
 	}
 }
