@@ -19,6 +19,11 @@ struct Job
 };
 
 /*
+*
+*/
+const char* ClientMessageType_str(enum ClientMessageType clientMessageType);
+
+/*
  *
  */
 uint8_t getJobType(char JobType);

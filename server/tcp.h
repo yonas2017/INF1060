@@ -7,9 +7,10 @@
 
 struct Tcp
 {
-	char* m_ip;
-	uint16_t m_port;
-	int m_sockDesc; // Internal Socket descriptor
+	char* m_fileName; // Filename holding one or more jobs used to send to the client
+	uint16_t m_port;  // Server listening Port
+	int m_listenSock; // TCP socket
+	int m_newSock ;   // New socket to transmit data per connection
 };
 
 typedef struct Tcp* TcpPtr;
@@ -17,7 +18,7 @@ typedef struct Tcp* TcpPtr;
 /*
  *
  */
-void tcpopen(TcpPtr p_tcp);
+int tcpOpen(TcpPtr p_tcp);
 
 /*
  * Send UDP message
@@ -27,7 +28,7 @@ int tcpSend(TcpPtr p_tcp, const ServerMessagePtr p_message);
 /*
  * Receive UDP message
  */
-int tcpReceive(TcpPtr p_tcp, ClientMessagePtr p_message/*, MessageType messageType*/);
+int tcpReceive(TcpPtr p_tcp, ClientMessagePtr p_message);
 
 /*
  *

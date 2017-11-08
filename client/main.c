@@ -9,8 +9,8 @@
 static void help()
 {
 	printf("./client <ip> <port>\n");
-	printf("	<ip>   : ip to use\n");
-	printf("	<port> : port to use\n");
+	printf("	<ip>   : Client IP Adress.\n");
+	printf("	<port> : Client Port.\n");
 }
 
 int main(int argc, char* argv [])
@@ -37,10 +37,10 @@ int main(int argc, char* argv [])
 	client.m_tcp.m_ip = argv[1];
 	sscanf(argv[2], "%d", &client.m_tcp.m_port);
 
-	// if(tcpOpen(&client.m_tcp) != 0) //TODO
-	// {
-	// 	return -1;
-	// }
+	if(tcpOpen(&client.m_tcp) != 0)
+	{
+		return -1;
+	}
 
 	/*
 	 * Create Two Queues for the childs
