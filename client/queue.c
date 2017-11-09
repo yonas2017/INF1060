@@ -20,13 +20,13 @@ QueuePtr queueCreate(int size)
 		p_queue->m_stack1 = stackCreate(size);
 		p_queue->m_stack2 = stackCreate(size);
 
-		printf("Queue Created Successfully.\n");
+		// printf("Queue Created Successfully.\n");
 	}
 
 	return p_queue;
 }
 
-void enqueue(QueuePtr p_queue, ServerMessagePtr message )
+void enqueue(QueuePtr p_queue, ServerMessagePtr message)
 {
 	if(!p_queue)
 	{
@@ -110,6 +110,6 @@ void queueDestroy(QueuePtr p_queue)
 		 */
 		free(p_queue);
 
-		printf("Queue Destroyed.\n");
+		// printf("Queue Destroyed.\n");
 	}
 }

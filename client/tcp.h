@@ -17,7 +17,7 @@ typedef struct Tcp* TcpPtr;
 /*
  *
  */
-void tcpOpen(TcpPtr p_tcp);
+int tcpOpen(TcpPtr p_tcp);
 
 /*
  * Send UDP message
@@ -27,7 +27,7 @@ int tcpSend(TcpPtr p_tcp, const ClientMessagePtr p_message);
 /*
  * Receive UDP message
  */
-int tcpReceive(TcpPtr p_tcp, ServerMessagePtr p_message/*, MessageType messageType*/);
+int tcpReceive(TcpPtr p_tcp, ServerMessagePtr p_message);
 
 /*
  *
