@@ -1,0 +1,108 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+void childProcess(int *p) {
+char readbuffer[1];      
+
+/* Child process closes up write-side of pipe because it is not used bit the child.*/
+ close(p[1]);
+  
+ /* Child process reads from read-side of pipe, and prints to STDOUT */
+ int n;  
+ while((n=read(p[0], readbuffer, sizeof(readbuffer))) >= sizeof(readbuffer)) {
+   write(STDOUT_FILENO,readbuffer,n);   
+ }
+
+ /* Child process closes read-side once writing is complete. */  
+ //close(p[0]);
+
+}
+
+void parentProcess(int *p, char *msg) {
+
+  /* Parent process closes up read-side of pipe because it is not used bit the parent. */
+  close(p[0]);
+  
+  /* Parent process writes to write-side of pipe */
+  write(p[1], msg, strlen(msg));   
+
+  /* Parent process closes write-side once writing is complete. */  
+  //close(p[1]);
+ 
+}
+
+int main(){     
+  int p;
+
+  int pipeClientToChildA[2];   
+  int pipeClientToChildB[2];  
+
+  p= pipe(pipeClientToChildA);    
+  if(p < 0){         
+    printf("Error Creating piple for Child A.");  
+    _exit(1);   
+  }      
+
+  p= pipe(pipeClientToChildB);    
+  if(p < 0){         
+    printf("Error Creating piple for Child B.");  
+    _exit(1);   
+  }      
+
+  int fA = fork();    
+  if(fA > 0){
+    
+    FILE *fp;
+    char ch;
+    int info_start=0,info_end=0;
+    if( (fp = fopen("job.txt", "r")) == NULL)
+      fprintf(stderr, "ERROR: job.txt does not exist.\n");
+    
+    while( fscanf(fp, "%c", &ch) == 1) {
+      // fprintf(stdout, "%c", ch);
+
+      //while(1) {
+      int  size_msgA = 1000;
+      char *msgA=(char *)malloc(size_msgA);
+      //strcpy(msgA,"ClientToChildA:STD_OUT.1\n");
+      strcpy(msgA,&ch);
+      parentProcess(pipeClientToChildA,msgA);
+      free(msgA);
+
+      //int  size_msgB = 1000;
+      //char *msgB=(char *)malloc(size_msgB);
+      //strcpy(msgB,"ClientToChildB:STD_OUT.1\n");
+      //parentProcess(pipeClientToChildB,msgB);
+      //free(msgB);
+    }
+
+    fclose(fp);
+
+
+  }  
+  else if(fA == 0){       
+    
+    int fB = fork();    
+    if(fB > 0){
+      childProcess(pipeClientToChildA);
+    }  
+    else if(fB== 0){       
+      childProcess(pipeClientToChildB);
+    }  
+    else{      
+      printf("Error creating child process B.");   
+    }      
+  }  
+  else{      
+    printf("Error creating child process A.");   
+  }      
+
+
+
+  while(1);
+
+  return 0;
+
+}
